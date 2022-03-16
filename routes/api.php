@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group( [], __DIR__ . "/api/open/index.php" );
 Route::prefix( "auth" )->group(  __DIR__ . "/api/auth/index.php" );
+Route::middleware( "auth:sanctum" )->group(  __DIR__ . "/api/authenticated/index.php" );

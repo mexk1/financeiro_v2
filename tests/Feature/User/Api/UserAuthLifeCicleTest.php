@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Auth\User;
+namespace Tests\Feature\User\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -11,13 +11,6 @@ use Tests\TestCase;
 class UserAuthLifeCicleTest extends TestCase
 {
     use DatabaseMigrations;
-    protected User $user;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->user = User::factory()->createOne();
-    }
 
     public function test_unverified_user_cant_login(){
         $user = User::factory()->unverified()->createOne();
