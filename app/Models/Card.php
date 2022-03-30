@@ -6,20 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BankAccount extends Model
+class Card extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         "name",
-        "balance"
+        "bank_account_id",
+        "last_digits",
+        "mode",
+        "bill_close_day",
+        "limit",
     ];
-
-    public function account(){
-        return $this->belongsTo( Account::class );
-    }
-
-    public function cards(){
-        return $this->hasMany( Card::class );
-    }
 }
