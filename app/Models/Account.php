@@ -25,4 +25,26 @@ class Account extends Model
     public function bank_accounts(){
         return $this->hasMany( BankAccount::class );
     }
+
+    public function cards(){
+        return $this->hasManyThrough(
+            Card::class,
+            BankAccount::class
+        );
+    }
+
+    public function getPaymentMethodsAttribute(){
+        $methods = [];
+        file_put_contents( __DIR__ . "/test.json", json_encode( $this->bank_accounts ) );
+
+        $this->bank_accounts->each( function( BankAccount $bank_account ) use ( &$methods ) {
+            array_push( $methods, [
+                "origin" => "bank_account",
+                "mode" => "debit",
+                "reference_id" => $bank_account->id
+            ]);
+        });
+
+        return $methods;
+    }
 }

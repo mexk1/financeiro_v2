@@ -11,5 +11,7 @@ Route::controller( AccountController::class )->group( function(){
         Route::get("/", "read" );
         Route::patch("/", "update" );
         Route::delete("/", "desactivate" );
+
+        Route::get("/payment-methods", "paymentMethods" );
     });
 });

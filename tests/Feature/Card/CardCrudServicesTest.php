@@ -44,7 +44,7 @@ class CardCrudServicesTest extends TestCase
         $service = new UpdateCardService( $card, $data );
 
         $result = $service->run();
-        foreach( $data as $prop=> $value )
+        foreach( $data as $prop => $value )
             $this->assertEquals( $result->{$prop}, $value );
 
         $data = array_merge(['id' => $card->id,], $data );

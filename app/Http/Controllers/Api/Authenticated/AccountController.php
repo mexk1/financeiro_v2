@@ -67,4 +67,16 @@ class AccountController extends Controller
 
         return response( null, 503 );
     }
+
+
+    public function paymentMethods( Account $account  ){
+
+        if(
+            request()->user('sanctum')?->id ||
+            request()->user('sanctum')?->id !== $account->owner->id ||
+            !$account->users()->find( request()->user('sanctum')?->id  )
+        ){ throw new HttpException( 403 ); }
+
+        return response( )->json( $account->payment_methods );
+    }
 }
