@@ -72,10 +72,17 @@ class AccountController extends Controller
     public function paymentMethods( Account $account  ){
 
         if(
-            request()->user('sanctum')?->id ||
-            request()->user('sanctum')?->id !== $account->owner->id ||
+            request()->user('sanctum')?->id !== $account->owner->id
+            &&
             !$account->users()->find( request()->user('sanctum')?->id  )
-        ){ throw new HttpException( 403 ); }
+        ){
+            file_put_contents( __DIR__ . "/debug.log",
+                json_encode( [
+                    request()->user('sanctum'),
+                    $account->owner,
+                ], JSON_PRETTY_PRINT ) );
+            throw new HttpException( 403 );
+        }
 
         return response( )->json( $account->payment_methods );
     }

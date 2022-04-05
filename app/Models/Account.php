@@ -35,7 +35,7 @@ class Account extends Model
 
     public function getPaymentMethodsAttribute(){
         $methods = [];
-        file_put_contents( __DIR__ . "/test.json", json_encode( $this->bank_accounts ) );
+        // file_put_contents( __DIR__ . "/test.json", json_encode( $this->bank_accounts ) );
 
         $this->bank_accounts->each( function( BankAccount $bank_account ) use ( &$methods ) {
             array_push( $methods, [
@@ -43,6 +43,30 @@ class Account extends Model
                 "mode" => "debit",
                 "reference_id" => $bank_account->id
             ]);
+            $bank_account->cards()->each( function( Card $card ) use ( &$methods ) {
+
+                if( $card->mode !== "both" ){
+                    return array_push( $methods, [
+                        "origin" => "card",
+                        "mode" =>  $card->mode,
+                        "reference_id" => $card->id
+                    ]);
+                }
+
+                /**
+                 * On tests, credit should list first, as the array_push function prepend on array use debit first
+                 */
+                array_push( $methods, [
+                    "origin" => "card",
+                    "mode" => "debit",
+                    "reference_id" => $card->id
+                ]);
+                array_push( $methods, [
+                    "origin" => "card",
+                    "mode" =>  "credit",
+                    "reference_id" => $card->id
+                ]);
+            });
         });
 
         return $methods;

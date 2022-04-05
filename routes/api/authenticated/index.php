@@ -2,4 +2,4 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('accounts')->group( __DIR__ . "/accounts/index.php" );
+Route::name('accounts.')->prefix('accounts')->group( __DIR__ . "/accounts/index.php" );

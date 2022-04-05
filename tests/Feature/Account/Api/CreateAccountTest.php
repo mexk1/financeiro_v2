@@ -23,7 +23,7 @@ class CreateAccountTest extends TestCase
         $user = User::factory()->createOne();
         Sanctum::actingAs(
             $user,
-            [ '*', "create_account" ]
+            [ '*', "accounts.create" ]
         );
 
         $payload = [
@@ -43,7 +43,7 @@ class CreateAccountTest extends TestCase
     {
         Sanctum::actingAs(
             User::factory()->createOne(),
-            [ '*', "create_account" ]
+            [ '*', "accounts.create" ]
         );
         $payload = [ ];
         $response = $this->postJson("api/accounts", $payload );

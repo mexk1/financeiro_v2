@@ -4,14 +4,14 @@ use App\Http\Controllers\Api\Authenticated\AccountController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller( AccountController::class )->group( function(){
-    Route::get("/", "list" );
-    Route::post("/", "create" );
+    Route::get("/", "list" )->name('list');
+    Route::post("/", "create" )->name('create');
 
     Route::prefix('{account}')->group( function(){
-        Route::get("/", "read" );
-        Route::patch("/", "update" );
-        Route::delete("/", "desactivate" );
+        Route::get("/", "read" )->name('read');
+        Route::patch("/", "update" )->name('update');
+        Route::delete("/", "desactivate" )->name('desactivate');
 
-        Route::get("/payment-methods", "paymentMethods" );
+        Route::get("/payment-methods", "paymentMethods" )->name('paymentMethods');
     });
 });
