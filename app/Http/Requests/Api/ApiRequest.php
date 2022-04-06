@@ -6,30 +6,23 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class ApiRequest extends FormRequest
+abstract class ApiRequest extends FormRequest
 {
     /**
      * @return bool
      */
-    public function authorize()
-    {
-        return true;
-    }
+    abstract public function authorize();
 
     /**
      * @return array
      */
-    public function rules()
-    {
-        return [
-            //
+    abstract public function rules();
+
+    final protected function failedValidation( Validator $validator ){
+        $data = [
+            "errors" => $validator->getMessageBag()
         ];
+        $response = response()->json( $data, 422 );
+        throw new ValidationException( $validator, $response );
     }
-
-    // protected function failedValidation( Validator $validator ){
-
-    //     $data = $validator->getMessageBag();
-    //     $response = response()->json( $data, 422 );
-    //     throw new ValidationException( $validator, $response );
-    // }
 }

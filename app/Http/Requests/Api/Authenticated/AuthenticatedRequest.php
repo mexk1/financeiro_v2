@@ -16,4 +16,8 @@ class AuthenticatedRequest extends ApiRequest{
         // file_put_contents( __DIR__. "/log.json", $user->currentAccessToken()->can('*') );
         return $user && $user->currentAccessToken()->can( $ability );
     }
+
+    public function rules(){
+        return [];
+    }
 }

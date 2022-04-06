@@ -28,7 +28,7 @@ class UserRegisterRequest extends ApiRequest
             "email" => [
                 "email",
                 "required",
-                "unique:users,id"
+                "unique:users,email"
             ],
             "password" => [
                 Password::min(6),
