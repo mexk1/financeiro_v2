@@ -13,7 +13,7 @@ class RegisterTest extends TestCase
     use DatabaseMigrations;
 
     public function test_api_register_user_missing_params_response(){
-        $response = $this->postJson("api/register", [] );
+        $response = $this->postJson( route('api.open.register') , [] );
         $response->assertStatus( 422 );
     }
 
@@ -24,7 +24,7 @@ class RegisterTest extends TestCase
             "password" => "123456",
             "password_confirmation" => "123456",
         ];
-        $response = $this->postJson("api/register", $data );
+        $response = $this->postJson( route('api.open.register') , $data );
         $response->assertStatus( 422 );
     }
 
@@ -37,7 +37,7 @@ class RegisterTest extends TestCase
             "password" => "123456",
             "password_confirmation" => "123456",
         ];
-        $response = $this->postJson("api/register", $data );
+        $response = $this->postJson( route('api.open.register') , $data );
         $response->assertStatus( 201 );
 
         unset( $data["password_confirmation"] );

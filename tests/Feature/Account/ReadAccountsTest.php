@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Account\Api;
+namespace Tests\Feature\Account;
 
 use App\Models\Account;
 use App\Models\User;
@@ -9,7 +9,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class RetrieveAccountsTest extends TestCase
+class ReadAccountsTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -20,31 +20,23 @@ class RetrieveAccountsTest extends TestCase
         $this->account = Account::factory()->createOne();
     }
 
-    public function test_unauthenticated_cant_list_accounts(){
-        $response = $this->getJson('api/accounts');
-        $response->assertUnauthorized();
-    }
-
-    public function test_unauthenticated_cant_retrieve_account(){
-        $response = $this->getJson("api/accounts/{$this->account->id}");
-        $response->assertUnauthorized();
-    }
-
     public function test_can_list_accounts(){
         Sanctum::actingAs(
             User::factory()->createOne(),
             [ '*', 'list_accounts' ]
         );
-        $response = $this->getJson('api/accounts');
+        $response = $this->getJson( route("api.accounts.list") );
         $response->assertOk();
     }
 
-    public function test_can_retrieve_account(){
+    public function test_can_read_account(){
         Sanctum::actingAs(
             $this->account->owner,
             [ '*', 'retriev_account' ]
         );
-        $response = $this->getJson("api/accounts/{$this->account->id}");
+
+        $account = $this->account;
+        $response = $this->getJson( route( "api.accounts.read", compact( 'account' )));
         $response->assertOk();
         $response->assertJson( function( AssertableJson $json ){
             $json->whereAll( [

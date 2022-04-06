@@ -28,7 +28,6 @@ class AccessPoliciesTest extends TestCase
         $this->member = User::factory()->createOne();
         $this->account = $this->owner->accounts()->save( Account::factory()->makeOne( ) );
 
-        //"/api/accounts/{$this->account->id}/payment-methods";
         $this->url = route('api.accounts.paymentMethods', [ 'account' => $this->account ]);
     }
 

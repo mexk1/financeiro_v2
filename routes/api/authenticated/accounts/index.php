@@ -8,10 +8,14 @@ Route::controller( AccountController::class )->group( function(){
     Route::post("/", "create" )->name('create');
 
     Route::prefix('{account}')->group( function(){
-        Route::get("/", "read" )->name('read');
+
+        Route::get("/", "read"  )->name('read');
         Route::patch("/", "update" )->name('update');
         Route::delete("/", "desactivate" )->name('desactivate');
-
         Route::get("/payment-methods", "paymentMethods" )->name('paymentMethods');
+
+        Route::name('bank-accounts.')
+            ->prefix('bank-accounts')
+            ->group( __DIR__ . "/bank-accounts/index.php" );
     });
 });

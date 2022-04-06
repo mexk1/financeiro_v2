@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Open\RegisterController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix("register")->group( __DIR__ . "/register/index.php" );
+Route::name("register")->post("/register", [ RegisterController::class, 'register' ] );

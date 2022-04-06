@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Feature\Account\Api;
+namespace Tests\Feature\Account;
 
 use App\Models\Account;
 use App\Models\User;
+use App\Services\CRUD\Account\CreateAccountService;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
@@ -13,12 +14,27 @@ class CreateAccountTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function test_unauthorized_cant_create_account(){
-        $response = $this->postJson( "api/accounts" );
-        $response->assertUnauthorized();
+    public function test_create_account_service(){
+
+        $data = [
+            "name" => "tester",
+        ];
+        $owner = User::factory()->createOne();
+
+        $service = new CreateAccountService( $data, $owner );
+        $result = $service->run();
+
+        $data["owner"] = $owner;
+        foreach( $data as $prop=> $value )
+            $this->assertEquals( $result->{$prop}, $value );
+
+        unset( $data["owner"] );
+        $data["owner_id"] = $owner->id;
+
+        $this->assertDatabaseHas( Account::class, $data );
     }
 
-    public function test_create_account()
+    public function test_create_account_api()
     {
         $user = User::factory()->createOne();
         Sanctum::actingAs(
@@ -29,7 +45,7 @@ class CreateAccountTest extends TestCase
         $payload = [
             'name' => "Test Account"
         ];
-        $response = $this->postJson("api/accounts", $payload );
+        $response = $this->postJson( route( "api.accounts.create" ), $payload );
         $response->assertStatus(201);
         $this->assertDatabaseHas( Account::class, $payload );
         $user_account = $user->ownedAccounts()
@@ -37,22 +53,6 @@ class CreateAccountTest extends TestCase
             ->where('owner_id', $user->id )
             ->first();
         $this->assertNotNull( $user_account );
-    }
-
-    public function test_missing_params_cant_create_account()
-    {
-        Sanctum::actingAs(
-            User::factory()->createOne(),
-            [ '*', "accounts.create" ]
-        );
-        $payload = [ ];
-        $response = $this->postJson("api/accounts", $payload );
-        $response->assertStatus(422);
-        $response->assertJson( function( AssertableJson $json ){
-            $json->has('errors')
-                 ->has("errors.name")
-                 ->etc();
-        });
     }
 
 }

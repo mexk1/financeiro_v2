@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Feature\Account\Api;
+namespace Tests\Feature\Account;
 
 use App\Models\Account;
 use App\Models\User;
+use App\Services\CRUD\Account\UpdateAccountService;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
@@ -20,6 +21,22 @@ class UpdateAccountTest extends TestCase
         $this->account = Account::factory()->createOne();
     }
 
+    public function test_update_account_service(){
+        $account = Account::factory()->createOne();
+
+        $data = [
+            "name" => "tester2",
+        ];
+        $service = new UpdateAccountService( $account, $data );
+
+        $result = $service->run();
+        foreach( $data as $prop=> $value )
+            $this->assertEquals( $result->{$prop}, $value );
+
+        $data = array_merge(['id' => $account->id,], $data );
+        $this->assertDatabaseHas( Account::class, $data );
+    }
+
     public function test_can_update_account(){
         Sanctum::actingAs(
             $this->account->owner,
@@ -28,7 +45,9 @@ class UpdateAccountTest extends TestCase
         $payload = [
             "name" => "Test Account edited"
         ];
-        $response = $this->patchJson("api/accounts/{$this->account->id}", $payload );
+
+        $account = $this->account;
+        $response = $this->patchJson( route('api.accounts.update', compact( 'account' ) ), $payload );
         $response->assertOk();
         $this->assertDatabaseHas( Account::class, [
             "name" => $payload["name"],
@@ -36,20 +55,10 @@ class UpdateAccountTest extends TestCase
         ]);
     }
 
-    public function test_unauthenticated_cant_update_account(){
-        $response = $this->patchJson("api/accounts/{$this->account->id}");
-        $response->assertUnauthorized();
-    }
-
-    public function test_not_owner_cant_update_account(){
-        Sanctum::actingAs(
-            User::factory()->createOne(),
-            [ '*', "update_account" ]
-        );
-        $response = $this->patchJson("api/accounts/{$this->account->id}");
-        $response->assertForbidden();
-    }
-
+    /**
+     * @todo Move it to Policies
+     * @todo Change to named route instead of url
+     */
     public function test_missing_params_cant_update_account()
     {
         Sanctum::actingAs(
