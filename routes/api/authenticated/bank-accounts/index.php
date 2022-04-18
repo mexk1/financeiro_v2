@@ -6,4 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('{bank_account}')->group(function(){
     Route::patch('/',   [ BankAccountController::class, 'update'        ])->name('update');
     Route::delete('/',  [ BankAccountController::class, 'desactivate'   ])->name('desactivate');
+
+    Route::prefix('cards')->name('cards.')->group( __DIR__ . "/cards/index.php");
 });

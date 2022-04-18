@@ -18,4 +18,8 @@ class Card extends Model
         "bill_close_day",
         "limit",
     ];
+
+    public function bank_account(){
+        return $this->belongsTo( BankAccount::class );
+    }
 }

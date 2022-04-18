@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api\Authenticated;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Authenticated\BankAccount\CreateBankAccountRequest;
+use App\Http\Requests\Api\Authenticated\BankAccount\CreateCardRequest;
 use App\Http\Requests\Api\Authenticated\BankAccount\UpdateBankAccountRequest;
 use App\Models\Account;
 use App\Models\BankAccount;
 use App\Services\CRUD\BankAccount\CreateBankAccountService;
 use App\Services\CRUD\BankAccount\DesactivateBankAccountService;
 use App\Services\CRUD\BankAccount\UpdateBankAccountService;
+use App\Services\CRUD\Card\CreateCardService;
 
 class BankAccountController extends Controller
 {
@@ -54,4 +56,19 @@ class BankAccountController extends Controller
         }
         return response( null, 503 );
     }
+
+    public function createCard(BankAccount $bank_account, CreateCardRequest $request){
+
+        $service = new CreateCardService( $request->validated(), $bank_account );
+
+        try {
+            if( $card = $service->run() )
+                return response()->json( $card, 201 );
+        } catch (\Throwable $th) {
+            report( $th );
+        }
+
+        return response( null, 503 );
+    }
+
 }
