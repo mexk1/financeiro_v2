@@ -17,5 +17,9 @@ Route::controller( AccountController::class )->group( function(){
         Route::name('bank-accounts.')
             ->prefix('bank-accounts')
             ->group( __DIR__ . "/bank-accounts/index.php" );
+
+        Route::name('spends.')
+            ->prefix('spends')
+            ->group( __DIR__ . "/spends/index.php" );
     });
 });

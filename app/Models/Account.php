@@ -71,4 +71,8 @@ class Account extends Model
 
         return $methods;
     }
+
+    public function spends(){
+        return $this->hasMany( Spend::class );
+    }
 }

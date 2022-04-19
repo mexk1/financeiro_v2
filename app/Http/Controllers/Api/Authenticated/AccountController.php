@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api\Authenticated;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Authenticated\Account\CreateAccountRequest;
+use App\Http\Requests\Api\Authenticated\Account\CreateSpendRequest;
 use App\Http\Requests\Api\Authenticated\Account\UpdateAccountRequest;
 use App\Models\Account;
 use App\Services\CRUD\Account\CreateAccountService;
 use App\Services\CRUD\Account\DesactivateAccountService;
 use App\Services\CRUD\Account\UpdateAccountService;
+use App\Services\CRUD\Spend\CreateSpendService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -79,4 +81,19 @@ class AccountController extends Controller
 
         return response( )->json( $account->payment_methods );
     }
+
+    public function createSpend( Account $account, CreateSpendRequest $request ){
+
+        $service = new CreateSpendService( $account, $request->validated( ) );
+
+        try {
+            if( $spend = $service->run() )
+                return response()->json( $spend, 201 );
+        } catch (\Throwable $th) {
+            report( $th );
+        }
+
+        return response( null, 503 );
+    }
+
 }
