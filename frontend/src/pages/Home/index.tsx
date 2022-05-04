@@ -1,10 +1,10 @@
-import LoggedTemplateComponent from "../../components/LoggedTemplateComponent"
+import LoggedTemplate from "../../Domains/User/LoggedTemplate"
 
 const Home = () => {
   return (
-    <LoggedTemplateComponent>
+    <LoggedTemplate>
       home
-    </LoggedTemplateComponent>
+    </LoggedTemplate>
   )
 }
 

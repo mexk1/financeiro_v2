@@ -7,7 +7,6 @@ use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -26,15 +25,15 @@ class AuthController extends Controller
         $user = User::where('email', $request->email )->first();
 
         if( !$user ){
-            throw ValidationException::withMessages([
+            return response()->json([
                 "email" => "the provided credential ara incorrect"
-            ])->status( 401 );
+            ], 401 );
         }
 
         if( !$user->hasVerifiedEmail() ){
-            throw ValidationException::withMessages([
+            return response()->json([
                 "email" => "You need to confirm your email first"
-            ]);
+            ], 401 );
         }
 
         if( Hash::check(  $request->password, $user->password ) ){
@@ -42,9 +41,9 @@ class AuthController extends Controller
             return response( $token, 201 );
         }
 
-        throw ValidationException::withMessages([
+        return response()->json([
             "email" => "the provided credential ara incorrect"
-        ])->status( 401 );
+        ], 401 );
     }
 
     public function logout( Request $request ){
