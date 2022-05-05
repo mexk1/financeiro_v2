@@ -2,7 +2,7 @@ import React, { ChangeEvent, useCallback, useState } from "react"
 import DefaultInput, { classes as DefaultInputClasses } from "./DefaultInput"
 import { BiHide, BiShow } from 'react-icons/bi'
 
-const DefaultPasswordInput = ( { name }:{name?:string} ) => {
+const DefaultPasswordInput = ( { ...props }:Props ) => {
 
   const [ show, setShow ] = useState(false)
   const [ value, setValue ] = useState<string>('')
@@ -26,9 +26,9 @@ const DefaultPasswordInput = ( { name }:{name?:string} ) => {
         <DefaultInput 
           type="password"
           value={ value }
-          name={ name }
           onChange={ handleChange }
           className={`focus:outline-none w-full ${show ? 'hidden' : '' }`} 
+          { ...props }
           />
       </div>
       <div onClick={ toggleShow } className="pl-2 border-l border-l-border ">
@@ -40,5 +40,8 @@ const DefaultPasswordInput = ( { name }:{name?:string} ) => {
     </div>
   )
 }
-
+interface Props {
+  name?:string, 
+  required?: boolean 
+}
 export default DefaultPasswordInput

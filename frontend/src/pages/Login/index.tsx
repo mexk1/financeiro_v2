@@ -12,7 +12,7 @@ const Login = () => {
 
   useEffect( () => {
     isLogged && navigate( PAGES.home.path )
-  }, [ isLogged ] )
+  }, [ isLogged, navigate ] )
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-900">

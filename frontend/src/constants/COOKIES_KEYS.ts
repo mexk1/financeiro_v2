@@ -1,6 +1,6 @@
 
 enum COOKIES_KEYS {
-  user_token = '@financial_control/user_token'
+  access_token = 'financial_control/access_token'
 }
 
 export default COOKIES_KEYS

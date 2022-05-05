@@ -15,3 +15,8 @@ Route::name('bank-accounts.')
 Route::name('cards.')
     ->prefix('cards')
     ->group( __DIR__ . "/cards/index.php" );
+
+
+Route::name('me.')
+    ->prefix('me')
+    ->group( __DIR__ . "/me/index.php" );

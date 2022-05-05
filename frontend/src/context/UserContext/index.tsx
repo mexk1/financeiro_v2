@@ -4,9 +4,14 @@ import { User } from "../../types/User"
 
 interface UserContextProps {
   state?: User,
-  setState?: Dispatch<SetStateAction<User | undefined>>
+  setState: Dispatch<SetStateAction<User | undefined> | User | undefined >
 }
-const UserContext = React.createContext<UserContextProps>( {} )
+
+const INITIAL_PROPS:UserContextProps = {
+  state: undefined,
+  setState: () => undefined 
+}
+const UserContext = React.createContext<UserContextProps>( INITIAL_PROPS )
 
 
 export default UserContext

@@ -1,6 +1,8 @@
-export default () => {
+import useUser from "./useUser"
 
-
-
-  return false
+const useIsUserLogged = () => {
+  return undefined !== useUser()
 }
+
+
+export default useIsUserLogged

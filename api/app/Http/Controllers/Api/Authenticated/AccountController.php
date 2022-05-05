@@ -24,7 +24,7 @@ class AccountController extends Controller
             ->whereHas( 'owner', function( Builder $query ) use ( $user ) {
                 return $query->where( 'id', $user->id );
             })
-            ->whereHas( 'users', function( Builder $query ) use ( $user ) {
+            ->orWhereHas( 'users', function( Builder $query ) use ( $user ) {
                 return $query->where( 'id', $user->id );
             })
             ->get();

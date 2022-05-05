@@ -1,5 +1,3 @@
-import Home from "../pages/Home"
-import Login from "../pages/Login"
 import { Page } from "../types/page"
 
 const PAGES = {
@@ -12,8 +10,27 @@ const PAGES = {
   home: { 
     path: '/',
     name: 'Home',
-  } as Page
+  } as Page,
 
+  accounts: { 
+    path: '/accounts',
+    name: 'Accounts',
+  } as Page,
+
+  spends: { 
+    path: '/spends',
+    name: 'Spends',
+  } as Page,
+
+  received: { 
+    path: '/received',
+    name: 'Received',
+  } as Page,
+
+  logout: { 
+    path: '/logout',
+    name: 'Logout',
+  } as Page,
 }
 
 export default PAGES
