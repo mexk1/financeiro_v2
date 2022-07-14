@@ -11,7 +11,7 @@ use App\Services\CRUD\Card\UpdateCardService;
 class CardsController extends Controller
 {
     public function read( Card $card ){
-        return response( $card );
+      return response( $card );
     }
 
     public function update( UpdateCardRequest $request, Card $card ){

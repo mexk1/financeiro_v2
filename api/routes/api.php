@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::name('api.')->group(function(){
 
+  
+    Route::get('health', fn() => response()->json('ok') )->name('health');
+
     Route::name('open.')->group( __DIR__ . "/api/open/index.php" );
     Route::name('auth.')->prefix( "auth" )->group(  __DIR__ . "/api/auth/index.php" );
 

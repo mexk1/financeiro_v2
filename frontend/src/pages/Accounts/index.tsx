@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import DefaultLoader from "../../components/DefaultLoader"
 import AccountCardComponent from "../../Domains/Accounts/AccountCardComponent"
 import LoggedTemplate from "../../Domains/User/LoggedTemplate"
+import useModal from "../../hooks/useModal"
 import useApi from "../../services/api/hooks/useApi"
 import { Account } from "../../types/Account"
 
@@ -9,8 +10,9 @@ const Accounts = () => {
 
   const api = useApi()
 
-  const [ loading, setLoading ] = useState( false )
+  const { Component: Modal, open } = useModal()
 
+  const [ loading, setLoading ] = useState( false )
   const [ accounts, setAccounts ] = useState<Account[]>( [] )
 
   const load = useCallback( async () => {
@@ -41,7 +43,15 @@ const Accounts = () => {
             <AccountCardComponent key={ account.id } account={ account } />
           ))
         }
+        <div >
+          <button 
+            onClick={ open }
+          >Adicionar nova </button>
+        </div>
       </div>
+      <Modal children={ <>Hello from modal </> } />
+        
+      
     </LoggedTemplate>
   )
   

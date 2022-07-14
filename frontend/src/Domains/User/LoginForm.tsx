@@ -26,7 +26,6 @@ const LoginForm = () => {
     setLoading( true  )
     await api.post( 'auth/login', data )
       .then( res => {
-        console.log( res.data )
         setCookie( COOKIES_KEYS.access_token, res.data )
         setTimeout( () => {
           setLoading( false )

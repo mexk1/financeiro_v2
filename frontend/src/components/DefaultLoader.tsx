@@ -40,11 +40,11 @@ const DefaultLoader = ( { size }:Props ) => {
         <path id="path" d="M50 15A15 35 0 0 1 50 85A15 35 0 0 1 50 15" fill="none"></path>
         <path id="patha" d="M0 0A15 35 0 0 1 0 70A15 35 0 0 1 0 0" fill="none"></path>
       </defs><g transform="rotate(0 50 50)">
-        <use xlinkHref="#path" stroke="#f1f2f3" stroke-width="3"></use>
+        <use xlinkHref="#path" stroke="#f1f2f3" strokeWidth="3"></use>
       </g><g transform="rotate(60 50 50)">
-        <use xlinkHref="#path" stroke="#f1f2f3" stroke-width="3"></use>
+        <use xlinkHref="#path" stroke="#f1f2f3" strokeWidth="3"></use>
       </g><g transform="rotate(120 50 50)">
-        <use xlinkHref="#path" stroke="#f1f2f3" stroke-width="3"></use>
+        <use xlinkHref="#path" stroke="#f1f2f3" strokeWidth="3"></use>
       </g><g transform="rotate(0 50 50)">
         <circle cx="50" cy="15" r="9" fill="#a855f7">
           <animateMotion dur="1s" repeatCount="indefinite" begin="0s">
