@@ -25,15 +25,13 @@ class AuthController extends Controller
         $user = User::where('email', $request->email )->first();
 
         if( !$user ){
-            return response()->json([
-                "email" => "the provided credential ara incorrect"
-            ], 401 );
+            return response()->json( "the provided credential are incorrect" , 401 );
         }
 
         if( !$user->hasVerifiedEmail() ){
-            return response()->json([
-                "email" => "You need to confirm your email first"
-            ], 401 );
+            return response()->json([ "errors" => [
+              "email" => "You need to confirm your email first"
+            ] ], 422 );
         }
 
         if( Hash::check(  $request->password, $user->password ) ){

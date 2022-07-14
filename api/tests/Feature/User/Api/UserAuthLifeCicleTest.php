@@ -33,11 +33,6 @@ class UserAuthLifeCicleTest extends TestCase
             "password" => "password123"
         ]);
         $response->assertStatus( 401 );
-        $response->assertJson( fn( AssertableJson $json ) =>
-            $json->has("errors")
-                 ->has("errors.email")
-                 ->etc()
-        );
     }
 
     public function test_user_can_login(){
