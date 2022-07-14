@@ -12,7 +12,10 @@ const useModal = () => {
     const realProps:ModalProps = {
       isOpen,
       ...props,
-      onClose: close
+      onClose: () => {
+        props.onClose && props.onClose()
+        close()
+      }
     }
     return (
       <Modal { ...realProps } />

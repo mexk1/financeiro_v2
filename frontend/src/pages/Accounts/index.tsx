@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import DefaultLoader from "../../components/DefaultLoader"
 import AccountCardComponent from "../../Domains/Accounts/AccountCardComponent"
+import AccountForm from "../../Domains/Accounts/AccountForm"
 import LoggedTemplate from "../../Domains/User/LoggedTemplate"
 import useModal from "../../hooks/useModal"
 import useApi from "../../services/api/hooks/useApi"
@@ -10,7 +11,9 @@ const Accounts = () => {
 
   const api = useApi()
 
-  const { Component: Modal, open } = useModal()
+  const [ selectedAccount, setSelectedAccount ] = useState<Account>()
+
+  const { Component: Modal, open, close } = useModal()
 
   const [ loading, setLoading ] = useState( false )
   const [ accounts, setAccounts ] = useState<Account[]>( [] )
@@ -25,9 +28,28 @@ const Accounts = () => {
     setLoading( false )
   }, [ api ] )
 
+  const handleUpdate = useCallback( () => {
+    setSelectedAccount( undefined )
+    close()
+    load()
+  }, [ load, close ] )
+
+  const selectForUpdate = ( a:Account ) => {
+    setSelectedAccount( undefined )
+    setTimeout( () => setSelectedAccount( a ), 100 )
+  }
+
+  useEffect( () => {
+    if( selectedAccount ) open()
+  }, [ selectedAccount, open ] )
+
   useEffect( () => {
     load()
   }, [ load ] )
+
+  useEffect( () => {
+    console.log( `render` )
+  }, [] )
 
   return(
     <LoggedTemplate title="Accounts">
@@ -40,7 +62,7 @@ const Accounts = () => {
         }
         { 
           accounts.map( account => (
-            <AccountCardComponent key={ account.id } account={ account } />
+            <AccountCardComponent key={ account.id } account={ account } onClick={ selectForUpdate } />
           ))
         }
         <div >
@@ -49,9 +71,9 @@ const Accounts = () => {
           >Adicionar nova </button>
         </div>
       </div>
-      <Modal children={ <>Hello from modal </> } />
-        
-      
+      <Modal 
+        children={ <AccountForm onSuccess={ handleUpdate }  account={ selectedAccount } /> } 
+      />
     </LoggedTemplate>
   )
   
