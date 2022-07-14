@@ -3,7 +3,7 @@ import { useMemo } from "react"
 const DefaultLoader = ( { size }:Props ) => {
 
 
-  const dimensions = useMemo( () => {
+  const dimensions = (() => {
     
     if( size === 'small' ){
       return {
@@ -23,7 +23,7 @@ const DefaultLoader = ( { size }:Props ) => {
       width: '100px',
       height: '100px',
     }
-  }, [ size ] )
+  })()
 
   return (
     <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" 

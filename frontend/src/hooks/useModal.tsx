@@ -1,32 +1,23 @@
-import React, { useCallback, useState } from "react"
-import { useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import Modal, { ModalProps } from "../components/Modal"
 
 const useModal = () => {
 
   const [ isOpen, setIsOpen ] = useState( false )
 
-  const Component = useMemo( ( ) => {
+  const open = () => setIsOpen( true )
+  const close = () => setIsOpen( false )
 
-    return ( props:ModalProps ) => {
-      const realProps:ModalProps = {
-        ...props,
-        isOpen,
-        onClose: () => setIsOpen( false )
-      }
-      return (
-        <Modal { ...realProps } />
-      )
+  const Component = useMemo( () => ( props:ModalProps ) => {
+    const realProps:ModalProps = {
+      isOpen,
+      ...props,
+      onClose: close
     }
+    return (
+      <Modal { ...realProps } />
+    )
   }, [ isOpen ] )
-
-  const open = useCallback( () => {
-    setIsOpen( true )
-  }, [ ] )
-
-  const close = useCallback( () => {
-    setIsOpen( false )
-  }, [  ] )
 
   return {
     Component,
