@@ -18,82 +18,96 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class AccountController extends Controller
 {
 
-    public function list( Request $request ){
-        $user = $request->user('sanctum');
-        $accounts = Account::query()
-            ->whereHas( 'owner', function( Builder $query ) use ( $user ) {
-                return $query->where( 'id', $user->id );
-            })
-            ->orWhereHas( 'users', function( Builder $query ) use ( $user ) {
-                return $query->where( 'id', $user->id );
-            })
-            ->get();
+  public function list(Request $request)
+  {
+    $user = $request->user('sanctum');
+    $accounts = Account::query()
+      ->whereHas('owner', function (Builder $query) use ($user) {
+        return $query->where('id', $user->id);
+      })
+      ->orWhereHas('users', function (Builder $query) use ($user) {
+        return $query->where('id', $user->id);
+      })
+      ->get();
 
-        return response()->json( $accounts );
+    return response()->json($accounts);
+  }
+
+  public function read(Account $account)
+  {
+    return response()->json($account);
+  }
+
+  public function create(CreateAccountRequest $request)
+  {
+    $service = new CreateAccountService($request->validated(), $request->user("sanctum"));
+
+    try {
+      $account = $service->run();
+      if ($account) return response()->json($account, 201);
+    } catch (\Throwable $th) {
+      report($th);
     }
 
-    public function read( Account $account ){
-        return response()->json( $account );
+    return response(null, 503);
+  }
+
+  public function update(UpdateAccountRequest $request, Account $account)
+  {
+    $service = new UpdateAccountService($account, $request->validated());
+    try {
+      if ($account = $service->run())
+        return response()->json($account, 200);
+    } catch (\Throwable $th) {
+      report($th);
+    }
+    return response(null, 503);
+  }
+
+  public function desactivate(Account $account)
+  {
+    $service = new DesactivateAccountService($account);
+
+    if (request()->user('sanctum')?->id !== $account->owner->id) {
+      throw new HttpException(403);
+    }
+    try {
+      if ($account = $service->run())
+        return response()->json($account);
+    } catch (\Throwable $th) {
+      report($th);
     }
 
-    public function create( CreateAccountRequest $request ){
-        $service = new CreateAccountService( $request->validated(), $request->user("sanctum") );
+    return response(null, 503);
+  }
 
-        try {
-            $account = $service->run();
-            if( $account ) return response()->json( $account, 201 );
-        } catch (\Throwable $th) { report( $th ); }
 
-        return response( null, 503 );
+  public function paymentMethods(Account $account)
+  {
+
+    if (
+      request()->user('sanctum')?->id !== $account->owner->id
+      &&
+      !$account->users()->find(request()->user('sanctum')?->id)
+    ) {
+      throw new HttpException(403);
     }
 
-    public function update( UpdateAccountRequest $request, Account $account  ){
-        $service = new UpdateAccountService( $account, $request->validated() );
-        try {
-            if( $account = $service->run() )
-                return response()->json( $account, 200 );
-        } catch (\Throwable $th) { report( $th ); }
-        return response( null, 503 );
+    return response()->json($account->payment_methods);
+  }
+
+  public function createSpend(Account $account, CreateSpendRequest $request)
+  {
+
+    $service = new CreateSpendService($account, $request->validated());
+
+    try {
+      if ($spend = $service->run())
+        return response()->json($spend, 201);
+    } catch (\Throwable $th) {
+      report($th);
     }
 
-    public function desactivate( Account $account  ){
-        $service = new DesactivateAccountService( $account );
-
-        if( request()->user('sanctum')?->id !== $account->owner->id ){
-            throw new HttpException( 403 );
-        }
-        try {
-            if( $account = $service->run() )
-                return response()->json( $account );
-        } catch (\Throwable $th) { report($th ); }
-
-        return response( null, 503 );
-    }
-
-
-    public function paymentMethods( Account $account  ){
-
-        if(
-            request()->user('sanctum')?->id !== $account->owner->id
-            &&
-            !$account->users()->find( request()->user('sanctum')?->id  )
-        ){ throw new HttpException( 403 ); }
-
-        return response( )->json( $account->payment_methods );
-    }
-
-    public function createSpend( Account $account, CreateSpendRequest $request ){
-
-        $service = new CreateSpendService( $account, $request->validated( ) );
-
-        try {
-            if( $spend = $service->run() )
-                return response()->json( $spend, 201 );
-        } catch (\Throwable $th) {
-            report( $th );
-        }
-
-        return response( null, 503 );
-    }
-
+    return response(null, 503);
+  }
 }

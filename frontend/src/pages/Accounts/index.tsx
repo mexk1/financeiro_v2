@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react"
 import DefaultLoader from "../../components/DefaultLoader"
+import Modal from "../../components/Modal"
 import AccountCardComponent from "../../Domains/Accounts/AccountCardComponent"
 import AccountForm from "../../Domains/Accounts/AccountForm"
 import LoggedTemplate from "../../Domains/User/LoggedTemplate"
-import useModal from "../../hooks/useModal"
+import useModalControls from "../../hooks/useModalControls"
 import useApi from "../../services/api/hooks/useApi"
 import { Account } from "../../types/Account"
 
@@ -13,10 +14,10 @@ const Accounts = () => {
 
   const [ selectedAccount, setSelectedAccount ] = useState<Account>()
 
-  const { Component: Modal, open, close } = useModal()
-
   const [ loading, setLoading ] = useState( false )
   const [ accounts, setAccounts ] = useState<Account[]>( [] )
+
+  const { open, close, isOpen } = useModalControls()
 
   const load = useCallback( async () => {
     setAccounts([])
@@ -28,28 +29,35 @@ const Accounts = () => {
     setLoading( false )
   }, [ api ] )
 
-  const handleUpdate = useCallback( () => {
+  const handleUpdate = () => {
     setSelectedAccount( undefined )
     close()
     load()
-  }, [ load, close ] )
+  }
 
   const selectForUpdate = ( a:Account ) => {
     setSelectedAccount( undefined )
-    setTimeout( () => setSelectedAccount( a ), 100 )
+    close()
+    setTimeout( () => {
+      open()
+      setSelectedAccount( a )
+    }, 100 )
   }
 
-  useEffect( () => {
-    if( selectedAccount ) open()
-  }, [ selectedAccount, open ] )
+  const Form = useCallback( () => (
+    <AccountForm 
+      onSuccess={ handleUpdate }  
+      account={ selectedAccount } 
+    /> 
+  ), [ selectedAccount ] )
 
   useEffect( () => {
     load()
   }, [ load ] )
 
   useEffect( () => {
-    console.log( `render` )
-  }, [] )
+    console.log( `parent`, isOpen )
+  }, [ isOpen ] )
 
   return(
     <LoggedTemplate title="Accounts">
@@ -65,15 +73,29 @@ const Accounts = () => {
             <AccountCardComponent key={ account.id } account={ account } onClick={ selectForUpdate } />
           ))
         }
-        <div >
-          <button 
-            onClick={ open }
-          >Adicionar nova </button>
+        <div className="text-black">
+          <Modal
+            trigger={ props => (
+              <button
+                { ...props } 
+                className={ "text-white" + ( props?.className ?? '' )} 
+                onClick={ e => {
+                    setSelectedAccount( undefined )
+                    props?.onClick && props.onClick( e )
+                  }
+                }
+              >
+                Adicionar nova
+              </button>
+            ) }
+            isOpen={ isOpen }
+            onOpen={ open }
+            onClose={ close }
+            children={ <Form /> }
+          />
         </div>
       </div>
-      <Modal 
-        children={ <AccountForm onSuccess={ handleUpdate }  account={ selectedAccount } /> } 
-      />
+      
     </LoggedTemplate>
   )
   

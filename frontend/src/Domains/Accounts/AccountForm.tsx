@@ -16,22 +16,34 @@ const AccountForm = ( { account, onSuccess }:Props ) => {
 
   const api = useApi( )
 
-  const handleSubmit = useCallback( async ( e:FormEvent<HTMLFormElement> ) => {
-    e.preventDefault()
-    setLoading( true )
-    const data = new FormData( e.currentTarget )
+  const update = async ( data: Object, account: Account ) => {
+    await api.patch<Account>(`/accounts/${account.id}`, data ).then( res => {
+      console.log( res.data )
+      onSuccess && onSuccess( res.data )
+    }).catch( console.log )
+  }
+
+  const create = async ( data: Object ) => {
     await api.post<Account>(`/accounts`, data ).then( res => {
       console.log( res.data )
       onSuccess && onSuccess( res.data )
     }).catch( console.log )
+  }
+
+  const handleSubmit = useCallback( async ( e:FormEvent<HTMLFormElement> ) => {
+    e.preventDefault()
+    setLoading( true )
+    const data = new FormData( e.currentTarget )
+    if( account ) update( Object.fromEntries( data ), account )
+    else create( data ) 
     setLoading( false )
-  }, [ onSuccess ] )
+  }, [ onSuccess, account ] )
 
   return ( 
-    <div className="p-4 w-full min-w-[350px]">
-      <DefaultForm onSubmit={ handleSubmit } >
+    <div className="p-4 w-full min-w-[350px] text-black">
+      <DefaultForm onSubmit={ handleSubmit } loading={ loading } >
         <DefaultInputLabel label="Nome da Conta">
-          <DefaultInput name="name" />
+          <DefaultInput name="name" defaultValue={ account?.name } />
         </DefaultInputLabel>
       </DefaultForm>
     </div>
