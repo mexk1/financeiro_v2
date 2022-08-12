@@ -26,7 +26,7 @@ const UserContextProvider: React.FC<PropsWithChildren<any>> = ( { children } ) =
         } )
       })
       .catch( err => {
-        if( err.repsonse.status === 401 )
+        if( err?.repsonse?.status === 401 )
           removeCookie( COOKIES_KEYS.access_token )
           
         console.log( err )

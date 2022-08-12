@@ -1,29 +1,33 @@
+
 import { FormEvent, useCallback, useState } from "react"
 import DefaultForm from "../../components/DefaultForm"
 import DefaultInput from "../../components/DefaultInput"
 import DefaultInputLabel from "../../components/DefaultInputLabel"
+import useShouldHaveAccountSelected from "../../context/AccountContext/useShouldHaveAccountSelected"
 import useApi from "../../services/api/hooks/useApi"
-import { Account } from "../../types/Account"
+import { Spend } from "../../types/Spend"
 
 
 interface Props { 
-  account?: Account,
-  onSuccess?: ( a: Account ) => void 
+  spend?: Spend,
+  onSuccess?: ( a: Spend ) => void 
 }
-const AccountForm = ( { account, onSuccess }:Props ) => {
+const SpendForm = ( { onSuccess, spend }:Props ) => {
+
+  const account = useShouldHaveAccountSelected()
 
   const [ loading, setLoading ] = useState( false )
 
   const api = useApi( )
 
-  const update = async ( data: Object, account: Account ) => {
-    await api.patch<Account>(`/accounts/${account.id}`, data ).then( res => {
+  const update = async ( data: Object, spend: Spend ) => {
+    await api.patch<Spend>(`/accounts/${account?.id}/spends/${spend.id}`, data ).then( res => {
       onSuccess && onSuccess( res.data )
     }).catch( console.log )
   }
 
   const create = async ( data: Object ) => {
-    await api.post<Account>(`/accounts`, data ).then( res => {
+    await api.post<Spend>(`/accounts/${account?.id}/spends`, data ).then( res => {
       onSuccess && onSuccess( res.data )
     }).catch( console.log )
   }
@@ -32,20 +36,23 @@ const AccountForm = ( { account, onSuccess }:Props ) => {
     e.preventDefault()
     setLoading( true )
     const data = new FormData( e.currentTarget )
-    if( account ) update( Object.fromEntries( data ), account )
+    if( spend ) update( Object.fromEntries( data ), spend )
     else create( data ) 
     setLoading( false )
-  }, [ onSuccess, account ] )
+  }, [ onSuccess, spend ] )
 
   return ( 
     <div className="p-4 w-full min-w-[350px] text-black">
       <DefaultForm onSubmit={ handleSubmit } loading={ loading } >
-        <DefaultInputLabel label="Nome da Conta">
-          <DefaultInput name="name" defaultValue={ account?.name } />
+        <DefaultInputLabel label="Descrição">
+          <DefaultInput name="description" defaultValue={ spend?.description } />
+        </DefaultInputLabel>
+        <DefaultInputLabel label="Value">
+          <DefaultInput name="value" type="numeric" defaultValue={ spend?.value } />
         </DefaultInputLabel>
       </DefaultForm>
     </div>
   )
 }
 
-export default AccountForm
+export default SpendForm

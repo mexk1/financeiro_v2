@@ -1,11 +1,14 @@
 import { PropsWithChildren } from "react"
+import AccountContextProvider from "./AccountContext/AccountContextProvider"
 import UserContextProvider from "./UserContext/UserContextProvider"
 
 const AppContext = ( {children}:Props ) => {
 
   return (
     <UserContextProvider>
-      { children }
+      <AccountContextProvider>
+        { children }
+      </AccountContextProvider>
     </UserContextProvider>
   )
 }

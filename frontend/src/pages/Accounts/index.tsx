@@ -55,10 +55,6 @@ const Accounts = () => {
     load()
   }, [ load ] )
 
-  useEffect( () => {
-    console.log( `parent`, isOpen )
-  }, [ isOpen ] )
-
   return(
     <LoggedTemplate title="Accounts">
       <div className="flex flex-col h-full justify-start items-center gap-4 p-8 w-full" >
@@ -70,23 +66,31 @@ const Accounts = () => {
         }
         { 
           accounts.map( account => (
-            <AccountCardComponent key={ account.id } account={ account } onClick={ selectForUpdate } />
+            <AccountCardComponent 
+              key={ account.id } 
+              account={ account } 
+              onClick={ selectForUpdate } 
+            />
           ))
         }
         <div className="text-black">
           <Modal
-            trigger={ props => (
-              <button
-                { ...props } 
-                className={ "text-white" + ( props?.className ?? '' )} 
-                onClick={ e => {
-                    setSelectedAccount( undefined )
-                    props?.onClick && props.onClick( e )
-                  }
-                }
-              >
-                Adicionar nova
-              </button>
+            trigger={ props => ( <>
+              {
+                !loading && 
+                  <button
+                    { ...props } 
+                    className={ "text-white" + ( props?.className ?? '' )} 
+                    onClick={ e => {
+                        setSelectedAccount( undefined )
+                        props?.onClick && props.onClick( e )
+                      }
+                    }
+                  >
+                    Adicionar nova
+                  </button>
+              }
+            </> 
             ) }
             isOpen={ isOpen }
             onOpen={ open }

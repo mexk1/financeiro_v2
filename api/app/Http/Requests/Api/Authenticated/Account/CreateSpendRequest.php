@@ -19,6 +19,10 @@ class CreateSpendRequest extends AuthenticatedRequest
                 'required',
                 'min:0.01',
                 'numeric'
+            ],
+            'description' => [
+              'string',
+              'nullable'
             ]
         ];
     }

@@ -110,4 +110,10 @@ class AccountController extends Controller
 
     return response(null, 503);
   }
+
+  public function listSpends(Account $account )
+  {
+    $spends = $account->spends()->paginate();
+    return response()->json( $spends );
+  }
 }

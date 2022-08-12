@@ -17,6 +17,11 @@ const PAGES = {
     name: 'Accounts',
   } as Page,
 
+  accountsSelect: { 
+    path: '/accounts/select',
+    name: 'AccountsSelect',
+  } as Page,
+
   spends: { 
     path: '/spends',
     name: 'Spends',
