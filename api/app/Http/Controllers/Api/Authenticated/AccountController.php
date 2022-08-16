@@ -113,7 +113,7 @@ class AccountController extends Controller
 
   public function listSpends(Account $account )
   {
-    $spends = $account->spends()->paginate();
+    $spends = $account->spends()->orderByDesc('id')->paginate();
     return response()->json( $spends );
   }
 }
