@@ -22,7 +22,7 @@ class CreateSpendRequest extends AuthenticatedRequest
             ],
             'description' => [
               'string',
-              'nullable'
+              'required'
             ]
         ];
     }

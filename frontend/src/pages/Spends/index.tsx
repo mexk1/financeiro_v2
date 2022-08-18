@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
+import InfiniteScroll from "react-infinite-scroll-component"
 import { useNavigate } from "react-router-dom"
 import DefaultLoader from "../../components/DefaultLoader"
 import Modal from "../../components/Modal"
@@ -17,7 +18,7 @@ const Spends = () => {
 
   const [selectSpend, setSelectedSpend] = useState<Spend>()
   const { open, close, isOpen } = useModalControls()
-  const { list, loading, reset } = usePagination<Spend>(`accounts/${account?.id}/spends`, true)
+  const { list, loading, reset, loadMore, end } = usePagination<Spend>(`accounts/${account?.id}/spends`)
 
   const handleUpdate = () => {
     setSelectedSpend(undefined)
@@ -72,20 +73,38 @@ const Spends = () => {
             isOpen={isOpen}
             onOpen={open}
             onClose={close}
-            children={<Form />}
+            children={ <Form /> }
           />
         </div>
-        {
-          loading &&
-          <div className="w-full h-full flex items-center">
-            <DefaultLoader />
-          </div>
-        }
-        <SpendsList
-          list={list}
-          onClickItem={selectForUpdate}
-        />
-
+        <div className="w-full h-full overflow-scroll" id="spends-list">
+          <InfiniteScroll
+            dataLength={list.length}
+            next={ loadMore }
+            scrollableTarget="spends-list"
+            hasMore={!end}
+            loader={
+              loading &&
+              <div className="w-full h-full flex items-center">
+                <DefaultLoader />
+              </div>
+            }
+            // below props only if you need pull down functionality
+            refreshFunction={reset}
+            pullDownToRefresh
+            pullDownToRefreshThreshold={50}
+            pullDownToRefreshContent={
+              <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+            }
+            releaseToRefreshContent={
+              <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+            }
+          >
+            <SpendsList
+              list={list}
+              onClickItem={selectForUpdate}
+            />
+          </InfiniteScroll>
+        </div>
       </div>
     </LoggedTemplate>
   )

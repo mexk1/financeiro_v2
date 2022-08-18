@@ -14,6 +14,8 @@ const useApi = () => {
       }
       return req
     }, rej => {
+
+      console.log( `rej` )
       return rej
     })
   }, [ user ] )

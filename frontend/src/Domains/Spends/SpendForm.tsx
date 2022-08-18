@@ -1,4 +1,5 @@
 
+import { AxiosError, AxiosResponse } from "axios"
 import { FormEvent, useCallback, useState } from "react"
 import DefaultForm from "../../components/DefaultForm"
 import DefaultInput from "../../components/DefaultInput"
@@ -12,6 +13,10 @@ interface Props {
   spend?: Spend,
   onSuccess?: ( a: Spend ) => void 
 }
+
+interface InvalidResponse {
+  errors: {}
+}
 const SpendForm = ( { onSuccess, spend }:Props ) => {
 
   const account = useShouldHaveAccountSelected()
@@ -20,24 +25,40 @@ const SpendForm = ( { onSuccess, spend }:Props ) => {
 
   const api = useApi( )
 
-  const update = async ( data: Object, spend: Spend ) => {
-    await api.patch<Spend>(`/accounts/${account?.id}/spends/${spend.id}`, data ).then( res => {
-      onSuccess && onSuccess( res.data )
-    }).catch( console.log )
+  const handleValidationError = ( error:AxiosError<InvalidResponse,AxiosResponse>, form:HTMLFormElement ) => {
+    Object.entries( error.response?.data?.errors ?? {} ).forEach( ( [field, errors] ) => {
+      const input = form.querySelector(`[name="${field}"]`)
+      const message = document.createElement('div');
+      ( errors as string[] ).map( (e:string) => {
+        message.innerHTML = message.innerHTML + `<br>` + e 
+      } )
+      input?.parentNode?.appendChild( message )
+      setTimeout( () => {
+        input?.parentNode?.removeChild( message )
+      }, 3000 )
+    })
   }
 
-  const create = async ( data: Object ) => {
-    await api.post<Spend>(`/accounts/${account?.id}/spends`, data ).then( res => {
+  const update = async ( data: Object, spend: Spend, form:HTMLFormElement ) => {
+    return await api.patch<Spend>(`/accounts/${account?.id}/spends/${spend.id}`, data ).then( res => {
       onSuccess && onSuccess( res.data )
-    }).catch( console.log )
+    }).catch( err => handleValidationError( err, form ) )
+  }
+
+  const create = async ( data: Object, form:HTMLFormElement ) => {
+    return await api.post<Spend>(`/accounts/${account?.id}/spends`, data ).then( res => {
+      onSuccess && onSuccess( res.data )
+    }).catch( err => handleValidationError( err, form ) )
   }
 
   const handleSubmit = useCallback( async ( e:FormEvent<HTMLFormElement> ) => {
     e.preventDefault()
     setLoading( true )
     const data = new FormData( e.currentTarget )
-    if( spend ) update( Object.fromEntries( data ), spend )
-    else create( data ) 
+
+    if( spend ) await update( Object.fromEntries( data ), spend, e.currentTarget )
+    else await create( data, e.currentTarget ) 
+    
     setLoading( false )
   }, [ onSuccess, spend ] )
 

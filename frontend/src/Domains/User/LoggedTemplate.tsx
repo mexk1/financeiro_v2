@@ -48,7 +48,7 @@ const LoggedTemplate = ( { children, title = "Financeiro", subTitle }:Props ) =>
           </span>
         }
       </div>
-      <div className="flex-1 bg-gray-900 text-white flex items-center justify-center pb-24  ">
+      <div className="flex-1 bg-gray-900 text-white flex items-center justify-center overflow-scroll">
         {  children}
       </div>
       <div className="w-full h-24 relative">

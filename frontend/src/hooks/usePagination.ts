@@ -5,6 +5,7 @@ import api from "../services/api"
 export interface PaginationConsumerProps<T>{
   page: number | undefined,
   loading: boolean,
+  end: boolean,
   loadMore: () => void,
   total: number,
   list: T[],
@@ -78,7 +79,8 @@ const usePagination = <T>( url:string, reversed:boolean = false ):PaginationCons
     loadMore,
     total, 
     list,
-    reset
+    reset,
+    end
   }
 }
 

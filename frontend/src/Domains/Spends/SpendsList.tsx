@@ -23,17 +23,13 @@ const ListItem = ( { spend, onClickItem }:ItemProps ) => {
   }
   return (
     <div 
-      className="flex justify-between align-center rounded bg-gray-100 p-2" 
+      className="flex justify-between align-center rounded bg-gray-200 p-2" 
       onClick={ handleClick } 
     >
       <div className="text-xl">
         <span>{ spend.description }</span>
         <div className="flex gap-2 text-xs text-gray-500">
-          <div>
-            <span>#</span>
-            {spend.id}
-          </div>
-          <span>{dateFormat(spend.created_at)}</span>
+          {dateFormat(spend.created_at)}
         </div>
       </div>
       <div className="flex items-center h-full text-xl flex-1 justify-end text-red-400">
