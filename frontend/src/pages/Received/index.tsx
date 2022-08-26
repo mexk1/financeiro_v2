@@ -9,15 +9,9 @@ const Received = () => {
   const navigate = useNavigate() 
 
   return(
-    <LoggedTemplate 
-      title="Received" 
-      subTitle={{
-        text: account?.name,
-        action: () => navigate(PAGES.accountsSelect.path)
-      }} 
-    >
+    <>
       Received
-    </LoggedTemplate>
+    </>
   )
   
 }

@@ -12,55 +12,52 @@ const AccountSelect = () => {
 
   const { account: contextAccount, setAccount } = useAccountContext()
 
-  const [ loading, setLoading ] = useState( false )
-  const [ accounts, setAccounts ] = useState<Account[]>( [] )
+  const [loading, setLoading] = useState(false)
+  const [accounts, setAccounts] = useState<Account[]>([])
 
-  const load = useCallback( async () => {
+  const load = useCallback(async () => {
     setAccounts([])
-    setLoading( true )
+    setLoading(true)
     await api.get('accounts')
-      .then( res => res.data )
-      .then( setAccounts )
-      .catch( console.log )
-    setLoading( false )
-  }, [ api ] )
+      .then(res => res.data)
+      .then(setAccounts)
+      .catch(console.log)
+    setLoading(false)
+  }, [api])
 
 
-  const selectAccount = ( a:Account ) => {
-    setAccount( undefined )
-    setTimeout( () => {
-      setAccount( a )
-    }, 100 )
+  const selectAccount = (a: Account) => {
+    setAccount(undefined)
+    setTimeout(() => {
+      setAccount(a)
+    }, 100)
   }
 
-  useEffect( () => {
+  useEffect(() => {
     load()
-  }, [ load ] )
+  }, [load])
 
-  return(
-    <LoggedTemplate title="Accounts">
-      <div className="flex flex-col h-full justify-start items-center gap-4 p-8 w-full" >
-        {
-          loading && 
-          <div className="w-full h-full flex items-center">
-            <DefaultLoader />
-          </div>
-        }
-        { 
-          accounts.map( account => (
-            <AccountCardComponent
-              key={ account.id } 
-              account={ account } 
-              onClick={ selectAccount } 
-              highlight={ account.id === contextAccount?.id }
-            />
-          ))
-        }
-      </div>
-      
-    </LoggedTemplate>
+  return (
+    <div className="flex flex-col h-full justify-start items-center gap-4 p-8 w-full" >
+      {
+        loading &&
+        <div className="w-full h-full flex items-center">
+          <DefaultLoader />
+        </div>
+      }
+      {
+        accounts.map(account => (
+          <AccountCardComponent
+            key={account.id}
+            account={account}
+            onClick={selectAccount}
+            highlight={account.id === contextAccount?.id}
+          />
+        ))
+      }
+    </div>
   )
-  
+
 }
 
 export default AccountSelect

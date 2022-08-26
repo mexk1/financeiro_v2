@@ -5,7 +5,7 @@ interface Props {
 const XHamburgerMenu = ( { open }:Props ) => {
 
   const commonClasses = [
-    "block w-full h-1.5 rounded absolute ",
+    "block w-full h-1 rounded absolute ",
     "transition-all ease-in-out bg-gray-800"
   ]
 

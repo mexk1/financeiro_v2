@@ -8,15 +8,9 @@ const Home = () => {
   const navigate = useNavigate() 
 
   return(
-    <LoggedTemplate 
-      title="Home" 
-      subTitle={{
-        text: account?.name,
-        action: () => navigate(PAGES.accountsSelect.path)
-      }} 
-    >
+    <>
       Home
-    </LoggedTemplate>
+    </>
   )
 }
 

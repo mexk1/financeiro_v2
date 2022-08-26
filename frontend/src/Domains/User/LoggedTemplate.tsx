@@ -172,9 +172,9 @@ const LoggedTemplate = ({ children, title = "Financeiro", subTitle }: Props) => 
       <div className="w-full relative">
         <div
           onClick={toggleMenu}
-          className="z-20 absolute translate-x-2/4 right-1/2 -top-8 h-14 w-14 rounded-full bg-purple-500 shadow-sm shadow-purple-900 flex items-center justify-center"
+          className="z-20 absolute translate-x-2/4 right-1/2 -top-6 h-12 w-12 rounded-full bg-purple-500 shadow-sm shadow-purple-900 flex items-center justify-center"
         >
-          <div className="w-8 h-8 flex items-center">
+          <div className="w-6 h-6 flex items-center">
             <XHamburgerMenu open={menuOpen} />
           </div>
         </div>

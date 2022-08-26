@@ -12,97 +12,95 @@ const Accounts = () => {
 
   const api = useApi()
 
-  const [ selectedAccount, setSelectedAccount ] = useState<Account>()
+  const [selectedAccount, setSelectedAccount] = useState<Account>()
 
-  const [ loading, setLoading ] = useState( false )
-  const [ accounts, setAccounts ] = useState<Account[]>( [] )
+  const [loading, setLoading] = useState(false)
+  const [accounts, setAccounts] = useState<Account[]>([])
 
   const { open, close, isOpen } = useModalControls()
 
-  const load = useCallback( async () => {
+  const load = useCallback(async () => {
     setAccounts([])
-    setLoading( true )
+    setLoading(true)
     await api.get('accounts')
-      .then( res => res.data )
-      .then( setAccounts )
-      .catch( console.log )
-    setLoading( false )
-  }, [ api ] )
+      .then(res => res.data)
+      .then(setAccounts)
+      .catch(console.log)
+    setLoading(false)
+  }, [api])
 
   const handleUpdate = () => {
-    setSelectedAccount( undefined )
+    setSelectedAccount(undefined)
     close()
     load()
   }
 
-  const selectForUpdate = ( a:Account ) => {
-    setSelectedAccount( undefined )
+  const selectForUpdate = (a: Account) => {
+    setSelectedAccount(undefined)
     close()
-    setTimeout( () => {
+    setTimeout(() => {
       open()
-      setSelectedAccount( a )
-    }, 100 )
+      setSelectedAccount(a)
+    }, 100)
   }
 
-  const Form = useCallback( () => (
-    <AccountForm 
-      onSuccess={ handleUpdate }  
-      account={ selectedAccount } 
-    /> 
-  ), [ selectedAccount ] )
+  const Form = useCallback(() => (
+    <AccountForm
+      onSuccess={handleUpdate}
+      account={selectedAccount}
+    />
+  ), [selectedAccount])
 
-  useEffect( () => {
+  useEffect(() => {
     load()
-  }, [ load ] )
+  }, [load])
 
-  return(
-    <LoggedTemplate title="Accounts">
-      <div className="flex flex-col h-full justify-start items-center gap-4 p-8 w-full" >
-        {
-          loading && 
-          <div className="w-full h-full flex items-center">
-            <DefaultLoader />
-          </div>
-        }
-        { 
-          accounts.map( account => (
-            <AccountCardComponent 
-              key={ account.id } 
-              account={ account } 
-              onClick={ selectForUpdate } 
-            />
-          ))
-        }
-        <div className="text-black">
-          <Modal
-            trigger={ props => ( <>
-              {
-                !loading && 
-                  <button
-                    { ...props } 
-                    className={ "text-white" + ( props?.className ?? '' )} 
-                    onClick={ e => {
-                        setSelectedAccount( undefined )
-                        props?.onClick && props.onClick( e )
-                      }
-                    }
-                  >
-                    Adicionar nova
-                  </button>
-              }
-            </> 
-            ) }
-            isOpen={ isOpen }
-            onOpen={ open }
-            onClose={ close }
-            children={ <Form /> }
-          />
+  return (
+    <div className="flex flex-col h-full justify-start items-center gap-4 p-8 w-full" >
+      {
+        loading &&
+        <div className="w-full h-full flex items-center">
+          <DefaultLoader />
         </div>
+      }
+      {
+        accounts.map(account => (
+          <AccountCardComponent
+            key={account.id}
+            account={account}
+            onClick={selectForUpdate}
+          />
+        ))
+      }
+      <div className="text-black">
+        <Modal
+          trigger={props => (<>
+            {
+              !loading &&
+              <button
+                {...props}
+                className={"text-white" + (props?.className ?? '')}
+                onClick={e => {
+                  setSelectedAccount(undefined)
+                  props?.onClick && props.onClick(e)
+                }
+                }
+              >
+                Adicionar nova
+              </button>
+            }
+          </>
+          )}
+          isOpen={isOpen}
+          onOpen={open}
+          onClose={close}
+          children={<Form />}
+        />
       </div>
-      
-    </LoggedTemplate>
+    </div>
+
   )
-  
+
 }
 
 export default Accounts

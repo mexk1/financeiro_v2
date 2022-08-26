@@ -43,70 +43,62 @@ const Spends = () => {
   ), [selectSpend])
 
   return (
-    <LoggedTemplate
-      title="Spends"
-      subTitle={{
-        text: account?.name,
-        action: () => navigate(PAGES.accountsSelect.path)
-      }}
-    >
-      <div className="flex flex-col h-full justify-start items-center gap-4 p-8 w-full" >
-        <div className="text-black">
-          <Modal
-            trigger={props => (<>
-              {
-                !loading &&
-                <button
-                  {...props}
-                  className={"text-white" + (props?.className ?? '')}
-                  onClick={e => {
-                    props?.onClick && props.onClick(e)
-                    setSelectedSpend(undefined)
-                  }
-                  }
-                >
-                  Adicionar nova
-                </button>
-              }
-            </>
-            )}
-            isOpen={isOpen}
-            onOpen={open}
-            onClose={close}
-            children={ <Form /> }
-          />
-        </div>
-        <div className="w-full h-full overflow-scroll" id="spends-list">
-          <InfiniteScroll
-            dataLength={list.length}
-            next={ loadMore }
-            scrollableTarget="spends-list"
-            hasMore={!end}
-            loader={
-              loading &&
-              <div className="w-full h-full flex items-center">
-                <DefaultLoader />
-              </div>
+    <div className="flex flex-col h-full justify-start items-center gap-4 p-8 w-full" >
+      <div className="text-black">
+        <Modal
+          trigger={props => (<>
+            {
+              !loading &&
+              <button
+                {...props}
+                className={"text-white" + (props?.className ?? '')}
+                onClick={e => {
+                  props?.onClick && props.onClick(e)
+                  setSelectedSpend(undefined)
+                }
+                }
+              >
+                Adicionar nova
+              </button>
             }
-            // below props only if you need pull down functionality
-            refreshFunction={reset}
-            pullDownToRefresh
-            pullDownToRefreshThreshold={50}
-            pullDownToRefreshContent={
-              <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-            }
-            releaseToRefreshContent={
-              <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-            }
-          >
-            <SpendsList
-              list={list}
-              onClickItem={selectForUpdate}
-            />
-          </InfiniteScroll>
-        </div>
+          </>
+          )}
+          isOpen={isOpen}
+          onOpen={open}
+          onClose={close}
+          children={<Form />}
+        />
       </div>
-    </LoggedTemplate>
+      <div className="w-full h-full overflow-scroll" id="spends-list">
+        <InfiniteScroll
+          dataLength={list.length}
+          next={loadMore}
+          scrollableTarget="spends-list"
+          hasMore={!end}
+          loader={
+            loading &&
+            <div className="w-full h-full flex items-center">
+              <DefaultLoader />
+            </div>
+          }
+          // below props only if you need pull down functionality
+          refreshFunction={reset}
+          pullDownToRefresh
+          pullDownToRefreshThreshold={50}
+          pullDownToRefreshContent={
+            <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+          }
+          releaseToRefreshContent={
+            <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+          }
+        >
+          <SpendsList
+            list={list}
+            onClickItem={selectForUpdate}
+          />
+        </InfiniteScroll>
+      </div>
+    </div>
   )
 }
 

@@ -10,35 +10,33 @@ import useApi from "../../services/api/hooks/useApi"
 const Logout = () => {
 
   const navigate = useNavigate()
-  
-  const { setState: setUser } = useContext( UserContext )
+
+  const { setState: setUser } = useContext(UserContext)
 
   const api = useApi()
-  const [ loading, setLoading ] = useState( false )
+  const [loading, setLoading] = useState(false)
   const isLogged = useIsUserLogged()
 
-  const doLogout = useCallback( async () => {
-    setLoading( true )
+  const doLogout = useCallback(async () => {
+    setLoading(true)
     await api.get('auth/logout')
-      .then( () => setUser( undefined ) )
-      .catch( console.log )
-    setLoading( false )
-  }, [ api, setUser ] )
+      .then(() => setUser(undefined))
+      .catch(console.log)
+    setLoading(false)
+  }, [api, setUser])
 
-  useEffect( () => {
-    !isLogged && navigate( PAGES.login.path )
-  }, [ isLogged, navigate ] )
+  useEffect(() => {
+    !isLogged && navigate(PAGES.login.path)
+  }, [isLogged, navigate])
 
-  useEffect( () => {
+  useEffect(() => {
     isLogged && doLogout()
-  }, [ doLogout, isLogged ])
+  }, [doLogout, isLogged])
 
   return (
-    <LoggedTemplate >
-      <div className="flex-1 items-center justify-center">
-        { loading && <DefaultLoader /> }
-      </div>
-    </LoggedTemplate>
+    <div className="flex-1 items-center justify-center">
+      {loading && <DefaultLoader />}
+    </div>
   )
 
 }
