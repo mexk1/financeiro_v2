@@ -16,6 +16,10 @@ use App\Services\CRUD\Card\CreateCardService;
 class BankAccountController extends Controller
 {
     //
+    public function list( Account $account ){
+      return response()->json( $account->bank_accounts()->get() );
+    }
+
     public function create( CreateBankAccountRequest $request, Account $account ){
 
         $service = new CreateBankAccountService( $request->validated(), $account );
@@ -71,4 +75,7 @@ class BankAccountController extends Controller
         return response( null, 503 );
     }
 
+    public function listCards( BankAccount $bank_account ){
+      return response()->json( $bank_account->cards()->get() );
+    }
 }

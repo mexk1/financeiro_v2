@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api\Authenticated;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Authenticated\Account\CreateAccountRequest;
+use App\Http\Requests\Api\Authenticated\Account\CreateCardRequest;
 use App\Http\Requests\Api\Authenticated\Account\CreateSpendRequest;
 use App\Http\Requests\Api\Authenticated\Account\UpdateAccountRequest;
 use App\Models\Account;
+use App\Models\BankAccount;
 use App\Services\CRUD\Account\CreateAccountService;
 use App\Services\CRUD\Account\DesactivateAccountService;
 use App\Services\CRUD\Account\UpdateAccountService;
+use App\Services\CRUD\Card\CreateCardService;
 use App\Services\CRUD\Spend\CreateSpendService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -111,9 +114,31 @@ class AccountController extends Controller
     return response(null, 503);
   }
 
-  public function listSpends(Account $account )
+  public function listSpends(Account $account)
   {
     $spends = $account->spends()->orderByDesc('id')->paginate();
-    return response()->json( $spends );
+    return response()->json($spends);
+  }
+
+  public function listCards(Account $account)
+  {
+    return response()->json($account->cards()->get());
+  }
+
+  public function createCard( CreateCardRequest $request)
+  {
+
+    $data = $request->validated();
+    $bank_account = BankAccount::find($data['bank_account']);
+    $service = new CreateCardService($request->validated(), $bank_account);
+
+    try {
+      if ($card = $service->run())
+        return response()->json($card, 201);
+    } catch (\Throwable $th) {
+      report($th);
+    }
+
+    return response(null, 503);
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Authenticated\BankAccount;
+namespace App\Http\Requests\Api\Authenticated\Account;
 
 use App\Http\Requests\Api\Authenticated\AuthenticatedRequest;
 use Illuminate\Validation\Rule;
@@ -27,7 +27,12 @@ class CreateCardRequest extends AuthenticatedRequest
                 'date_format:d'
             ],
             'mode' => [
-                Rule::in([ "credit", "debit", "both" ])
+              'required',
+              Rule::in([ "credit", "debit", "both" ])
+            ],
+            'bank_account' => [
+              'required',
+              'exists:bank_accounts,id'
             ],
             'limit' => [
                 'nullable',

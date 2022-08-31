@@ -5,6 +5,8 @@ import PAGES from "../constants/PAGES"
 import LoggedTemplate from "../Domains/User/LoggedTemplate"
 import Accounts from "../pages/Accounts"
 import AccountSelect from "../pages/Accounts/AccountSelect"
+import BankAccounts from "../pages/BankAccounts"
+import Cards from "../pages/Cards"
 import Home from "../pages/Home"
 import Login from "../pages/Login"
 import Logout from "../pages/Logout"
@@ -25,6 +27,8 @@ const Routes = () => {
           <Route path={PAGES.accountsSelect.path} element={<AccountSelect />} />
           <Route path={PAGES.spends.path} element={<Spends />} />
           <Route path={PAGES.received.path} element={<Received />} />
+          <Route path={PAGES.bankAccounts.path} element={<BankAccounts />} />
+          <Route path={PAGES.cards.path} element={<Cards />} />
           <Route path={PAGES.logout.path} element={<Logout />} />
         </Wrapper>
       </LoggedTemplate>
